@@ -8,6 +8,7 @@ Build-Depends:
  pkgconf,
  python3-dev,
  python3-sphinx,
+ python3-sphinx-copybutton,
  libdbus-1-dev,
  libcairo2-dev,
  fontconfig,
