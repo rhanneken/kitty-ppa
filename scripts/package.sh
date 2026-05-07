@@ -65,7 +65,7 @@ dch --create \
 
 # Build the signed source package
 echo "==> Building source package (version ${PACKAGE_VERSION})..."
-debuild -S -sa -k"${GPG_KEY_ID}"
+debuild -S -sa -d -k"${GPG_KEY_ID}"
 
 # Upload to Launchpad
 echo "==> Uploading to Launchpad..."
