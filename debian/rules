@@ -19,7 +19,7 @@ override_dh_auto_build:
 	# Noble. Intercept sphinx-build so HTML builds are a no-op; the man page
 	# builder does not use furo and continues to work normally.
 	mkdir -p debian/tmp-sphinx
-	printf '#!/bin/sh\n[ "$$2" = "html" ] && exit 0\nexec /usr/bin/sphinx-build "$$@"\n' \
+	printf '#!/bin/sh\nif [ "$$2" = "html" ]; then mkdir -p "$$4/html"; exit 0; fi\nexec /usr/bin/sphinx-build "$$@"\n' \
 		> debian/tmp-sphinx/sphinx-build
 	chmod +x debian/tmp-sphinx/sphinx-build
 	PATH="$(CURDIR)/debian/tmp-sphinx:$(PATH)" \
