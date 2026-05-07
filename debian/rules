@@ -10,8 +10,8 @@ export PATH := /usr/lib/go-1.26/bin:$(PATH)
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	mkdir -p kitty/fonts
-	cp debian/fonts/SymbolsNerdFontMono-Regular.ttf kitty/fonts/
+	mkdir -p fonts
+	cp debian/fonts/SymbolsNerdFontMono-Regular.ttf fonts/
 	python3 setup.py --ignore-compiler-warnings linux-package
 
 override_dh_auto_install:
