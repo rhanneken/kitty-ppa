@@ -83,10 +83,12 @@ jobs:
           echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --batch --import
           echo "${GPG_KEY_ID}:6:" | gpg --import-ownertrust
 
-          # Allow loopback pinentry for non-interactive signing
+          # Allow loopback pinentry and passphrase presetting for non-interactive signing
           mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          gpg-connect-agent reloadagent /bye
+          printf 'allow-loopback-pinentry\nallow-preset-passphrase\n' \
+            > ~/.gnupg/gpg-agent.conf
+          gpgconf --kill gpg-agent
+          gpg-connect-agent /bye
 
           # Pre-cache the passphrase so debuild can sign without prompting
           KEY_GRIP=$(gpg --with-keygrip --list-secret-keys "$GPG_KEY_ID" \
