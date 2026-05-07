@@ -52,6 +52,21 @@ echo "==> Source directory: $EXPECTED_DIR"
 echo "==> Copying debian/..."
 cp -r "${REPO_DIR}/debian" "${EXPECTED_DIR}/"
 
+# Download the latest SymbolsNerdFontMono font for add_builtin_fonts.
+# setup.py uses fc-list to find it on the build host, but Launchpad's build
+# environment has no Nerd Fonts package, so we pre-place it in debian/fonts/
+# and copy it into position in debian/rules before setup.py runs.
+echo "==> Fetching latest Symbols NERD Font Mono..."
+NERDFONT_TAG=$(curl -fsSL \
+    ${GITHUB_TOKEN:+-H "Authorization: Bearer ${GITHUB_TOKEN}"} \
+    "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
+    | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'])")
+echo "    nerd-fonts ${NERDFONT_TAG}"
+mkdir -p "${EXPECTED_DIR}/debian/fonts"
+curl -fL \
+    "https://github.com/ryanoasis/nerd-fonts/raw/${NERDFONT_TAG}/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf" \
+    -o "${EXPECTED_DIR}/debian/fonts/SymbolsNerdFontMono-Regular.ttf"
+
 # Generate a fresh changelog for this version
 echo "==> Generating debian/changelog..."
 cd "${EXPECTED_DIR}"

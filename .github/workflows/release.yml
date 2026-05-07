@@ -82,6 +82,7 @@ jobs:
         if: steps.check.outputs.needed == 'true'
         env:
           KITTY_VERSION: ${{ steps.latest.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/package.sh
 
       - name: Update tracked version
