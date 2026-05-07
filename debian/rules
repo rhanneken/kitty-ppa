@@ -3,6 +3,7 @@ export DH_VERBOSE = 1
 # Ensure Go 1.26 (from ppa:longsleep/golang-backports) is used rather than
 # Ubuntu Noble's system Go 1.22, which is too old for kitty.
 export PATH := /usr/lib/go-1.26/bin:$(PATH)
+export GOCACHE = $(CURDIR)/.cache/go-build
 
 %:
 	dh $@
