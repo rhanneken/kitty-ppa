@@ -4,9 +4,8 @@ Priority: optional
 Maintainer: Russell Hanneken <rhanneken@pobox.com>
 Build-Depends:
  debhelper-compat (= 13),
- golang-go (>= 1.21~),
- gcc,
- pkg-config,
+ golang-1.26-go,
+ pkgconf,
  python3-dev,
  libdbus-1-dev,
  libfontconfig-dev,
