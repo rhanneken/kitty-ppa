@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+	python3 setup.py linux-package
+
+override_dh_auto_install:
+	mkdir -p debian/kitty/usr
+	cp -r linux-package/bin   debian/kitty/usr/
+	cp -r linux-package/lib   debian/kitty/usr/
+	cp -r linux-package/share debian/kitty/usr/
+
+override_dh_auto_test:
+
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym

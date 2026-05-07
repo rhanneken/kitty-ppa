@@ -1,0 +1,6 @@
+[kitty-ppa]
+fqdn            = ppa.launchpad.net
+method          = ftp
+incoming        = ~rhanneken/ubuntu/kitty/
+login           = anonymous
+allow_unsigned_uploads = 0

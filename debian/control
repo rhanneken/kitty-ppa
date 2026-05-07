@@ -1,0 +1,51 @@
+Source: kitty
+Section: x11
+Priority: optional
+Maintainer: Russell Hanneken <rhanneken@pobox.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ golang-go (>= 1.21~),
+ gcc,
+ pkg-config,
+ python3-dev,
+ libdbus-1-dev,
+ libfontconfig-dev,
+ libfreetype-dev,
+ libgl-dev,
+ libharfbuzz-dev,
+ liblcms2-dev,
+ libpng-dev,
+ libssl-dev,
+ libwayland-dev,
+ libxcb1-dev,
+ libxcb-keysyms1-dev,
+ libxcb-render0-dev,
+ libxcb-xkb-dev,
+ libxcursor-dev,
+ libxi-dev,
+ libxinerama-dev,
+ libxkbcommon-dev,
+ libxkbcommon-x11-dev,
+ libxrandr-dev,
+ libxxhash-dev,
+ wayland-protocols,
+ zlib1g-dev
+Standards-Version: 4.6.2
+Homepage: https://sw.kovidgoyal.net/kitty/
+Rules-Requires-Root: no
+
+Package: kitty
+Architecture: any
+Depends:
+ python3,
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: Fast, feature-rich, GPU-based terminal emulator
+ kitty is a cross-platform, fast, feature-rich, GPU-based terminal
+ emulator. It supports all modern terminal features: graphics (the
+ kitty graphics protocol), unicode, true-colour, OpenType ligatures,
+ mouse protocol, focus tracking, bracketed paste, multiple copy/paste
+ buffers, and more.
+ .
+ It is designed for power keyboard users and provides a tile-based
+ layout for multiple windows, tabs, and configurable keyboard shortcuts.
