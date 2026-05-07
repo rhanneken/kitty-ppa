@@ -8,6 +8,7 @@ Build-Depends:
  pkgconf,
  python3-dev,
  libdbus-1-dev,
+ libcairo2-dev,
  libfontconfig-dev,
  libfreetype-dev,
  libgl-dev,
