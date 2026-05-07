@@ -52,6 +52,17 @@ echo "==> Source directory: $EXPECTED_DIR"
 echo "==> Copying debian/..."
 cp -r "${REPO_DIR}/debian" "${EXPECTED_DIR}/"
 
+# Vendor Go module dependencies.
+# Launchpad's build environment has no network access, so we download all
+# modules here and bundle them into debian/vendor.tar.gz so the build can
+# use -mod=vendor without touching the network.
+echo "==> Vendoring Go modules..."
+cd "${EXPECTED_DIR}"
+GOMODCACHE="${WORK_DIR}/go-mod-cache" GOFLAGS="" go mod vendor
+tar -czf debian/vendor.tar.gz vendor/
+rm -rf vendor/
+cd "${WORK_DIR}"
+
 # Download the latest SymbolsNerdFontMono font for add_builtin_fonts.
 # setup.py uses fc-list to find it on the build host, but Launchpad's build
 # environment has no Nerd Fonts package, so we pre-place it in debian/fonts/

@@ -54,9 +54,10 @@ jobs:
       - name: Install packaging tools
         if: steps.check.outputs.needed == 'true'
         run: |
+          sudo add-apt-repository -y ppa:longsleep/golang-backports
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
-            devscripts debhelper dput curl gnupg
+            devscripts debhelper dput curl gnupg golang-1.26-go
 
       - name: Import GPG key
         if: steps.check.outputs.needed == 'true'
@@ -83,7 +84,9 @@ jobs:
         env:
           KITTY_VERSION: ${{ steps.latest.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/package.sh
+        run: |
+          export PATH="/usr/lib/go-1.26/bin:$PATH"
+          bash scripts/package.sh
 
       - name: Update tracked version
         if: steps.check.outputs.needed == 'true'

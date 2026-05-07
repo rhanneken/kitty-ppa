@@ -5,6 +5,7 @@ export DH_VERBOSE = 1
 export PATH := /usr/lib/go-1.26/bin:$(PATH)
 export GOCACHE = $(CURDIR)/.cache/go-build
 export GOMODCACHE = $(CURDIR)/.cache/go-mod
+export GOFLAGS = -mod=vendor
 
 %:
 	dh $@
@@ -14,6 +15,7 @@ override_dh_auto_configure:
 override_dh_auto_build:
 	mkdir -p fonts
 	cp debian/fonts/SymbolsNerdFontMono-Regular.ttf fonts/
+	tar -xf debian/vendor.tar.gz
 	python3 setup.py --ignore-compiler-warnings linux-package
 
 override_dh_auto_install:
