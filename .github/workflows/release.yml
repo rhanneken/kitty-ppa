@@ -3,7 +3,15 @@ name: Package and upload kitty to PPA
 on:
   schedule:
     - cron: '0 6 * * *'   # 06:00 UTC daily
-  workflow_dispatch:        # allow manual triggering
+  workflow_dispatch:
+    inputs:
+      kitty_version:
+        description: 'kitty version to package (blank = use latest)'
+        required: false
+      ppa_revision:
+        description: 'PPA revision suffix (e.g. ppa1)'
+        required: false
+        default: 'ppa1'
 
 concurrency:
   group: release
@@ -31,10 +39,14 @@ jobs:
       - name: Get latest kitty release
         id: latest
         run: |
-          VERSION=$(curl -fsSL \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/kovidgoyal/kitty/releases/latest \
-            | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
+          if [ -n "${{ inputs.kitty_version }}" ]; then
+            VERSION="${{ inputs.kitty_version }}"
+          else
+            VERSION=$(curl -fsSL \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/kovidgoyal/kitty/releases/latest \
+              | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
+          fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Latest kitty release: $VERSION"
 
@@ -43,7 +55,10 @@ jobs:
         run: |
           LATEST="${{ steps.latest.outputs.version }}"
           TRACKED="${{ steps.tracked.outputs.version }}"
-          if [ "$LATEST" = "$TRACKED" ]; then
+          if [ -n "${{ inputs.kitty_version }}" ]; then
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch: packaging kitty $LATEST as ${{ inputs.ppa_revision || 'ppa1' }}"
+          elif [ "$LATEST" = "$TRACKED" ]; then
             echo "needed=false" >> "$GITHUB_OUTPUT"
             echo "kitty $LATEST is already tracked. Nothing to do."
           else
@@ -84,12 +99,13 @@ jobs:
         env:
           KITTY_VERSION: ${{ steps.latest.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PPA_REVISION: ${{ inputs.ppa_revision || 'ppa1' }}
         run: |
           export PATH="/usr/lib/go-1.26/bin:$PATH"
           bash scripts/package.sh
 
       - name: Update tracked version
-        if: steps.check.outputs.needed == 'true'
+        if: steps.check.outputs.needed == 'true' && inputs.kitty_version == ''
         env:
           KITTY_VERSION: ${{ steps.latest.outputs.version }}
         run: |
