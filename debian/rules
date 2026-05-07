@@ -15,7 +15,15 @@ override_dh_auto_build:
 	mkdir -p fonts
 	cp debian/fonts/SymbolsNerdFontMono-Regular.ttf fonts/
 	tar -xf debian/vendor.tar.gz
-	python3 setup.py --ignore-compiler-warnings linux-package
+	# The HTML docs require the furo theme, which is not packaged in Ubuntu
+	# Noble. Intercept sphinx-build so HTML builds are a no-op; the man page
+	# builder does not use furo and continues to work normally.
+	mkdir -p debian/tmp-sphinx
+	printf '#!/bin/sh\n[ "$$2" = "html" ] && exit 0\nexec /usr/bin/sphinx-build "$$@"\n' \
+		> debian/tmp-sphinx/sphinx-build
+	chmod +x debian/tmp-sphinx/sphinx-build
+	PATH="$(CURDIR)/debian/tmp-sphinx:$(PATH)" \
+		python3 setup.py --ignore-compiler-warnings linux-package
 
 override_dh_auto_install:
 	mkdir -p debian/kitty/usr
