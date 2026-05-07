@@ -4,6 +4,7 @@ export DH_VERBOSE = 1
 # Ubuntu Noble's system Go 1.22, which is too old for kitty.
 export PATH := /usr/lib/go-1.26/bin:$(PATH)
 export GOCACHE = $(CURDIR)/.cache/go-build
+export GOMODCACHE = $(CURDIR)/.cache/go-mod
 
 %:
 	dh $@
