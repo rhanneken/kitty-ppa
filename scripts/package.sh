@@ -63,9 +63,16 @@ dch --create \
     --distribution "${DISTRO}" \
     "New upstream release ${KITTY_VERSION}."
 
-# Build the signed source package
+# Build the signed source package.
+# Include the orig tarball (-sa) only for ppa1; on re-uploads (ppa2+) the
+# orig is already in Launchpad's file pool and re-uploading it causes rejection.
 echo "==> Building source package (version ${PACKAGE_VERSION})..."
-debuild -S -sa -d -k"${GPG_KEY_ID}"
+if [ "${PPA_REVISION}" = "ppa1" ]; then
+    ORIG_FLAG="-sa"
+else
+    ORIG_FLAG="-sd"
+fi
+debuild -S "${ORIG_FLAG}" -d -k"${GPG_KEY_ID}"
 
 # Upload to Launchpad
 echo "==> Uploading to Launchpad..."
