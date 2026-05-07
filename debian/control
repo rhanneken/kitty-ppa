@@ -16,6 +16,7 @@ Build-Depends:
  libharfbuzz-dev,
  liblcms2-dev,
  libpng-dev,
+ libsimde-dev,
  libssl-dev,
  libwayland-dev,
  libxcb1-dev,
