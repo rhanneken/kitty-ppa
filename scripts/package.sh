@@ -83,7 +83,11 @@ curl -fL \
 # in debian/pip-packages.tar.gz; debian/rules extracts it and adds it to
 # PYTHONPATH so sphinx-build can build the HTML docs.
 echo "==> Bundling furo Sphinx theme..."
-pip install --target="${WORK_DIR}/pip-packages" furo
+# Install only furo and sphinx-basic-ng (its sole non-system dep) without
+# pulling in Sphinx or other packages already provided by apt.  Mixing a
+# pip-bundled Sphinx with the system's sphinx_inline_tabs causes API
+# incompatibilities; --no-deps avoids that conflict.
+pip install --no-deps --target="${WORK_DIR}/pip-packages" furo sphinx-basic-ng
 tar -czf "${EXPECTED_DIR}/debian/pip-packages.tar.gz" \
     -C "${WORK_DIR}" pip-packages/
 
