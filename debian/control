@@ -7,6 +7,7 @@ Build-Depends:
  golang-1.26-go,
  pkgconf,
  python3-dev,
+ python3-bs4,
  python3-sphinx,
  python3-sphinx-copybutton,
  python3-sphinx-inline-tabs,
