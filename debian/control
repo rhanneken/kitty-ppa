@@ -43,6 +43,8 @@ Rules-Requires-Root: no
 
 Package: kitty
 Architecture: any
+Breaks: kitty-doc, kitty-shell-integration, kitty-terminfo
+Replaces: kitty-doc, kitty-shell-integration, kitty-terminfo
 Depends:
  python3,
  ${shlibs:Depends},
