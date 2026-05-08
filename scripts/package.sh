@@ -78,6 +78,15 @@ curl -fL \
     "https://github.com/ryanoasis/nerd-fonts/raw/${NERDFONT_TAG}/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf" \
     -o "${EXPECTED_DIR}/debian/fonts/SymbolsNerdFontMono-Regular.ttf"
 
+# Bundle the furo Sphinx theme and its dependencies.
+# Launchpad has no network access, so we pre-install furo here and ship it
+# in debian/pip-packages.tar.gz; debian/rules extracts it and adds it to
+# PYTHONPATH so sphinx-build can build the HTML docs.
+echo "==> Bundling furo Sphinx theme..."
+pip install --target="${WORK_DIR}/pip-packages" furo
+tar -czf "${EXPECTED_DIR}/debian/pip-packages.tar.gz" \
+    -C "${WORK_DIR}" pip-packages/
+
 # Generate a fresh changelog for this version
 echo "==> Generating debian/changelog..."
 cd "${EXPECTED_DIR}"
