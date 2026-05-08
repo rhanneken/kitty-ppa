@@ -87,7 +87,7 @@ echo "==> Bundling furo Sphinx theme..."
 # pulling in Sphinx or other packages already provided by apt.  Mixing a
 # pip-bundled Sphinx with the system's sphinx_inline_tabs causes API
 # incompatibilities; --no-deps avoids that conflict.
-pip install --no-deps --target="${WORK_DIR}/pip-packages" furo sphinx-basic-ng
+pip install --no-deps --target="${WORK_DIR}/pip-packages" furo sphinx-basic-ng pygments
 tar -czf "${EXPECTED_DIR}/debian/pip-packages.tar.gz" \
     -C "${WORK_DIR}" pip-packages/
 
