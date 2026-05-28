@@ -2,7 +2,8 @@ name: Package and upload kitty to PPA
 
 on:
   schedule:
-    - cron: '0 6 * * *'   # 06:00 UTC daily
+    - cron: '48 2 * * *'   # 2:48am daily
+      timezone: 'America/New_York'
   workflow_dispatch:
     inputs:
       kitty_version:
