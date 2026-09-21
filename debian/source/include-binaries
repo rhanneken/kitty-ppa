@@ -1,3 +1,4 @@
 debian/fonts/SymbolsNerdFontMono-Regular.ttf
 debian/vendor.tar.gz
 debian/pip-packages.tar.gz
+debian/slang.tar.gz
