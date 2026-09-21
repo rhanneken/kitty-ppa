@@ -88,8 +88,44 @@ echo "==> Bundling furo Sphinx theme..."
 # pip-bundled Sphinx with the system's sphinx_inline_tabs causes API
 # incompatibilities; --no-deps avoids that conflict.
 pip install --no-deps --target="${WORK_DIR}/pip-packages" furo sphinx-basic-ng accessible-pygments
+
+# Bundle a newer docutils.
+# kitty's docs/conf.py imports docutils.parsers.rst.roles.normalize_options,
+# which was only added in docutils 0.23; Noble ships 0.20.1. --no-deps avoids
+# pulling in a newer Sphinx that would conflict with the system one.
+echo "==> Bundling newer docutils..."
+pip install --no-deps --target="${WORK_DIR}/pip-packages" 'docutils>=0.22'
+
 tar -czf "${EXPECTED_DIR}/debian/pip-packages.tar.gz" \
     -C "${WORK_DIR}" pip-packages/
+
+# Bundle the shader slang compiler (slangc).
+# kitty 0.49.0 added support for custom shaders, which requires slangc to
+# compile the built-in default shaders at build time. It is not packaged for
+# Ubuntu, so we download the prebuilt release pinned in kitty's own
+# bypy/sources.json and ship it in debian/slang.tar.gz; debian/rules extracts
+# it and points SLANGC at the bundled binary. We drop libslang-llvm.so (LLVM
+# backend, ~150MB) and libgfx.so (GPU API runtime) since kitty only uses
+# slangc to compile to GLSL/SPIR-V text, not to run compiled shaders.
+echo "==> Bundling shader slang compiler..."
+SLANG_VERSION=$(python3 -c "
+import json
+with open('${EXPECTED_DIR}/bypy/sources.json') as f:
+    for dep in json.load(f):
+        if dep['name'].startswith('slang '):
+            print(dep['name'].split()[-1])
+            break
+")
+echo "    shader-slang ${SLANG_VERSION}"
+mkdir -p "${WORK_DIR}/slang-bundle/slang"
+curl -fL \
+    "https://github.com/shader-slang/slang/releases/download/v${SLANG_VERSION}/slang-${SLANG_VERSION}-linux-x86_64.tar.gz" \
+    -o "${WORK_DIR}/slang.tar.gz"
+tar -xzf "${WORK_DIR}/slang.tar.gz" -C "${WORK_DIR}/slang-bundle/slang" bin lib
+rm -f "${WORK_DIR}/slang-bundle/slang/lib/libslang-llvm.so" \
+    "${WORK_DIR}/slang-bundle/slang/lib/libgfx.so"*
+tar -czf "${EXPECTED_DIR}/debian/slang.tar.gz" \
+    -C "${WORK_DIR}/slang-bundle" slang/
 
 # Generate a fresh changelog for this version
 echo "==> Generating debian/changelog..."
