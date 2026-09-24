@@ -130,7 +130,7 @@ tar -czf "${EXPECTED_DIR}/debian/slang.tar.gz" \
 # Generate a fresh changelog for this version
 echo "==> Generating debian/changelog..."
 cd "${EXPECTED_DIR}"
-DEBEMAIL="rhanneken@pobox.com" \
+DEBEMAIL="russell@russellhanneken.com" \
 DEBFULLNAME="Russell Hanneken" \
 dch --create \
     --package kitty \

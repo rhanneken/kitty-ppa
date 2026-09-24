@@ -1,7 +1,7 @@
 Source: kitty
 Section: x11
 Priority: optional
-Maintainer: Russell Hanneken <rhanneken@pobox.com>
+Maintainer: Russell Hanneken <russell@russellhanneken.com>
 Build-Depends:
  debhelper-compat (= 13),
  golang-1.26-go (>= 1.26.5~),

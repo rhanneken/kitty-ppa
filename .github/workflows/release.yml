@@ -121,7 +121,7 @@ jobs:
           KITTY_VERSION: ${{ steps.latest.outputs.version }}
         run: |
           echo "$KITTY_VERSION" > last-uploaded-version
-          git config user.email "rhanneken@pobox.com"
+          git config user.email "russell@russellhanneken.com"
           git config user.name "kitty-ppa bot"
           git add last-uploaded-version
           git commit -m "Track kitty ${KITTY_VERSION}"
